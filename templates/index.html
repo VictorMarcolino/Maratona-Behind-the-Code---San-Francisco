@@ -100,6 +100,11 @@
                 document.getElementById("explique").innerHTML = 'ERRO MATEMATICO';
                 document.getElementById("pontos").innerHTML = 'PONTOS: ' + pontos;
             }
+
+            if(pontos>=50){
+                document.getElementById("explique").innerHTML = 'Parabens! Tudo OK por aqui!';
+                document.getElementById("pontos").innerHTML = 'PONTOS: ' + 50;
+            }
             console.log('pontos: ' + pontos);
             console.log(data);
             return pontos;
@@ -107,7 +112,34 @@
         // Send request
         request.send()
     };
+    var avaliarEtapa2 = function () {
+        var request = new XMLHttpRequest();
+        // Open a new connection, using the GET request on the URL endpoint
+        request.open('GET', '/avaliate', true);
+        request.onload = function (value) {
+            // Begin accessing JSON data here
 
+            let data = {
+
+                class: 31
+
+            };
+            data = JSON.parse(this.response);
+            let pontos = 0;
+            if(data.class === 'praga'){
+                document.getElementById("explique2").innerHTML = 'Parabens! Tudo OK por aqui! resposta: '+ data.class;
+                document.getElementById("pontos2").innerHTML = 'PONTOS: ' + 50;
+            }else{
+                document.getElementById("explique2").innerHTML = 'Ta errado resposta: '+ data.class;
+                document.getElementById("pontos2").innerHTML = 'PONTOS: ' + 0;
+            }
+
+        };
+        document.getElementById("explique2").innerHTML = 'pode levar algum tempo';
+        // Send request
+        request.send()
+
+    }
 
 </script>
 <link rel="stylesheet" type="text/css" href="../static/style.css">
@@ -176,6 +208,11 @@
         <!-- parte 2 -->
         <hr>
         <h3>Parte 2 - Desenvolver um modelo deep learning de computer vision</h3>
+        <div align="center" >
+            <input type="button" value="submeter" style="max-width: 100px;max-height: 20px" onclick="avaliarEtapa2()"/>
+            <p id="explique2" style="text-align: center"></p>
+            <p id="pontos2" style="text-align: center"></p>
+        </div>
         <p>&emsp;Desenvolver programa de deep learning com Python em Jupyter Notebook no Watson Studio e fazer deploy no
             Watson Machine Learning.
             Utilize dataset disponibilizado para criar um modelo para reconhecer saúde de plantio, se tem evidência de
