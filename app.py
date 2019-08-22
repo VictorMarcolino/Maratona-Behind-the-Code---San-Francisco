@@ -6,8 +6,8 @@ import numpy as np
 from PIL import Image
 from flask import Flask, render_template, request, json
 
-from connect import WatsonConnect
-from formulas.respostas import connectToIoT
+
+from formulas.respostas import connectToIoT, WatsonConnect
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -17,7 +17,7 @@ classes = ['normal', 'praga']
 # COLOQUE AQUI SUA URL DO MODELO
 model_endpoint_url = "https://eu-gb.ml.cloud.ibm.com/v3/wml_instances/6b701a7c-2988-4118-ba78-87deca634aa6/deployments/e82abb04-8c0a-474f-a7c5-9ffd034f9acc/online"
 # COLOQUE AQUI SUAS CREDENCIAIS
-wml_credentials = {
+watson_machine_learning_credentials = {
 	"apikey"                : "cPXyktYqJXBbb2l7Lcr_iO2-rYI2TmnA0L1UIo-q24W5",
 	"iam_apikey_description": "Auto-generated for key 3ed26d7a-2839-4f23-ace3-420fe2fecfe9",
 	"iam_apikey_name"       : "Credenciais de serviço-1",
@@ -26,7 +26,7 @@ wml_credentials = {
 	"instance_id"           : "6b701a7c-2988-4118-ba78-87deca634aa6",
 	"url"                   : "https://eu-gb.ml.cloud.ibm.com"
 	}
-conn = WatsonConnect(wml_credentials)
+conn = WatsonConnect(watson_machine_learning_credentials)
 myConfig = {
 	"auth": {
 		"key"  : "a-6j2xmi-z5pvdhhtfa",
@@ -70,9 +70,7 @@ def predict():
 	image = request.files["image"].read()
 	image = Image.open(io.BytesIO(image))
 	image = prepare_image(image)
-	model_payload = {"values": image}
-	model_result = conn.sendImage(json=model_payload, url=model_endpoint_url)
-
+	model_result = modelo(image)
 	resposta = {
 		"class": classes[model_result['values'][0][1][0]]
 		}
@@ -83,12 +81,18 @@ def predict():
 def avaliate():
 	image = Image.open("teste123.jpg")
 	image = prepare_image(image)
-	model_payload = {"values": image}
-	model_result = conn.sendImage(json=model_payload, url=model_endpoint_url)
+
+	model_result = modelo(image)
 	resposta = {
 		"class": classes[model_result['values'][0][1][0]]
 		}
 	return resposta
+
+
+def modelo(image):
+	# Defina aqui a conexão com o modelo
+	model_payload = {"values": image}
+	return conn.sendImage(json=model_payload, url=model_endpoint_url)
 
 
 if __name__ == '__main__':
