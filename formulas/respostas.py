@@ -1,13 +1,5 @@
 import numpy as np
 import wiotp.sdk.application as application
-
-# myConfig = {
-# 	"auth": {
-# 		"key"  : "a-6j2xmi-z5pvdhhtfa",
-# 		"token": "5_-d)L!Lq8pd720slb"
-# 		}
-# 	}
-# respostaFromIoT = connectToIoT(myConfig)
 def fahrenheit(Celsius):
 	return 9.0 / 5.0 * Celsius + 32
 

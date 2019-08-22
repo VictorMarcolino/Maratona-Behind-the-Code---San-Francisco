@@ -35,6 +35,7 @@ myConfig = {
 	}
 respostaFromIoT = connectToIoT(myConfig)
 
+
 @app.route("/", methods=['GET'])
 def hello():
 	error = None
@@ -51,12 +52,7 @@ def result():
 		"volumeAgua": "data",
 		"fahrenheit": "data"
 		}
-
-	response = app.response_class(
-			response=json.dumps(respostaFromIoT),
-			status=200,
-			mimetype='application/json'
-			)
+	response = app.response_class(response=json.dumps(respostaFromIoT), status=200, mimetype='application/json')
 	return response
 
 
@@ -66,6 +62,7 @@ def prepare_image(image):
 	image = np.expand_dims(image, axis=0)
 	image = image.tolist()
 	return image
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -81,9 +78,9 @@ def predict():
 		}
 	return resposta
 
+
 @app.route('/avaliate', methods=['GET'])
 def avaliate():
-	# NÃO ALTERE
 	image = Image.open("teste123.jpg")
 	image = prepare_image(image)
 	model_payload = {"values": image}
@@ -92,6 +89,7 @@ def avaliate():
 		"class": classes[model_result['values'][0][1][0]]
 		}
 	return resposta
+
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=port)
