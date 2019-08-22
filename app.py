@@ -13,27 +13,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 port = int(os.getenv('PORT', 8080))
 
-classes = ['normal', 'praga']
-# COLOQUE AQUI SUA URL DO MODELO
-model_endpoint_url = "https://eu-gb.ml.cloud.ibm.com/v3/wml_instances/6b701a7c-2988-4118-ba78-87deca634aa6/deployments/e82abb04-8c0a-474f-a7c5-9ffd034f9acc/online"
-# COLOQUE AQUI SUAS CREDENCIAIS
-watson_machine_learning_credentials = {
-	"apikey"                : "cPXyktYqJXBbb2l7Lcr_iO2-rYI2TmnA0L1UIo-q24W5",
-	"iam_apikey_description": "Auto-generated for key 3ed26d7a-2839-4f23-ace3-420fe2fecfe9",
-	"iam_apikey_name"       : "Credenciais de serviço-1",
-	"iam_role_crn"          : "crn:v1:bluemix:public:iam::::serviceRole:Writer",
-	"iam_serviceid_crn"     : "crn:v1:bluemix:public:iam-identity::a/01814b0447774fbc983e10bb072893bd::serviceid:ServiceId-95fcb599-b656-48a6-8d19-0b943d5edc2c",
-	"instance_id"           : "6b701a7c-2988-4118-ba78-87deca634aa6",
-	"url"                   : "https://eu-gb.ml.cloud.ibm.com"
-	}
-conn = WatsonConnect(watson_machine_learning_credentials)
-myConfig = {
-	"auth": {
-		"key"  : "a-6j2xmi-z5pvdhhtfa",
-		"token": "5_-d)L!Lq8pd720slb"
-		}
-	}
-respostaFromIoT = connectToIoT(myConfig)
+
 
 
 @app.route("/", methods=['GET'])
@@ -52,7 +32,7 @@ def result():
 		"volumeAgua": "data",
 		"fahrenheit": "data"
 		}
-	response = app.response_class(response=json.dumps(respostaFromIoT), status=200, mimetype='application/json')
+	response = app.response_class(response=json.dumps(resposta), status=200, mimetype='application/json')
 	return response
 
 
@@ -72,7 +52,7 @@ def predict():
 	image = prepare_image(image)
 	model_result = modelo(image)
 	resposta = {
-		"class": classes[model_result['values'][0][1][0]]
+		"class": model_result
 		}
 	return resposta
 
@@ -81,10 +61,9 @@ def predict():
 def avaliate():
 	image = Image.open("teste123.jpg")
 	image = prepare_image(image)
-
 	model_result = modelo(image)
 	resposta = {
-		"class": classes[model_result['values'][0][1][0]]
+		"class": model_result
 		}
 	return resposta
 
@@ -92,7 +71,7 @@ def avaliate():
 def modelo(image):
 	# Defina aqui a conexão com o modelo
 	model_payload = {"values": image}
-	return conn.sendImage(json=model_payload, url=model_endpoint_url)
+	return "Algo"
 
 
 if __name__ == '__main__':
